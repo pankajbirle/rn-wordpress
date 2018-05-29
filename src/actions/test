@@ -1,0 +1,151 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import styles from '../../../assets/styles';
+import { getDataById, updateDataById } from '../../../actions/Posts';
+import { HeaderComponent, ToastComponent } from '../../common';
+
+import {
+    View, Text, ActivityIndicator, FlatList, TouchableOpacity, TextInput, Button
+} from 'react-native';
+
+import {
+    Header, Body, Container, Content, Icon, Card
+} from 'native-base';
+
+class EditPost extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            postId: '',
+            showToast: false,
+            visible: false,
+            toastBgColor: 'green',
+            title : '',
+            content : ''
+        }
+    }
+
+    /**
+     * @method componentDidMount
+     * @description Code some necessary actions to be taken as soon as component mounts
+     */
+    componentDidMount() {
+        /** Action method called to load the api as soon as the component is mounted */
+        const { navigation } = this.props;
+        const postId = navigation.getParam('postId', 'NO-ID');
+        this.props.getDataById(postId);
+    }
+
+    /**
+     * @method updatePost
+     * @description Function to update the post
+     */
+    updatePost = () => {
+        let requestParams = {
+            "data": {
+                "content": {
+                    "rendered": this.state.content,
+                }
+            }
+        };
+        this.props.updateDataById(requestParams);
+    }
+
+    /**
+     * @method hideToast
+     * @description function to hide toast
+     */
+    hideToast = () => {
+        setTimeout(() => this.setState({
+            visible: false
+        }), 2000); /** hide toast after 2s */
+    }
+
+    /**
+     * @method render
+     * @description Renders the component
+     */
+    render() {
+        const isFetching = this.props.isFetching;
+        return (
+            <Container>
+                <HeaderComponent
+                    title='Edit Post'
+                    leftButton='back'
+                />
+                <Content style={styles.contentStyle}>
+                    {this.props.singlePost.length != 0 && (
+                        <Card style={styles.cardStyle}>
+                            <View style={styles.flexDirectionStyle}>
+                                <View style={styles.viewTitle}>
+                                    <TextInput
+                                        style={styles.title}
+                                        onChangeText={(title) => this.setState({ title })}
+                                        value={this.props.singlePost.title.rendered}
+                                    />
+                                </View>
+                            </View>
+                            <TextInput
+                                multiline={true}
+                                numberOfLines={4}
+                                style={styles.post}
+                                onChangeText={(content) => this.setState({ content })}
+                                value={this.props.singlePost.content.rendered}
+                            />
+                        </Card>
+                    )}
+                    <ActivityIndicator
+                        animating={isFetching}
+                        size="large"
+                    />
+                    <Button
+                        title='Update'
+                        onPress={this.updatePost}
+                    />
+                    <ToastComponent
+                        visible={this.state.visible}
+                        backgroundColor={this.state.toastBgColor}
+                        onShow={this.hideToast}
+                        message={this.state.message}
+                    />
+                </Content>
+            </Container>
+        )
+    }
+}
+
+/**
+ * @method mapStateToProps
+ * @description return state to component as props
+* @param {*} state
+                                    */
+function mapStateToProps(state) {
+    return {
+        isFetching: state.posts.isFetching,
+        singlePost: state.posts.singlePost,
+    }
+}
+
+/**
+ * @method mapDispatchToProps
+ * @description dispatch actions
+* @param {*} dispatch
+                        */
+function mapDispatchToProps(dispatch) {
+    return {
+        getDataById: (id) => dispatch(getDataById(id)),
+        updateDataById: (id) => dispatch(updateDataById(id))
+    }
+}
+
+/**
+ * @method connect
+ * @description connect with redux
+* @param {function} mapStateToProps
+* @param {function} mapDispatchToProps
+                        */
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(EditPost);
