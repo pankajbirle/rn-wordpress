@@ -59,17 +59,12 @@ class EditPost extends Component {
      * @description Function to update the post
      */
     updatePost = () => {
-        let requestParams = {
-            "data": {
-                "content": {
-                    "rendered": this.state.content,
-                }
-            }
-        }
+        const { title, content, postId } = this.state;
+        let requestParams = { title, content, id: postId };
 
         //  alert(JSON.stringify(requestParams));
-        this.props.updateDataById(this.state.postId, res => {
-            let status = res.response.data.data.status;
+        this.props.updateDataById(requestParams, res => {
+            let status = res.status;
             if (status != 200 && status != 204) {
                 if (status == 404) {
                     this.setState({

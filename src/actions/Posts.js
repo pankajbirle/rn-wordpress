@@ -9,7 +9,7 @@ AsyncStorage.getItem('userResponse')
     .then((value) => {
         if (value != null) {
             value = JSON.parse(value)
-            headers['Authorization'] = 'Bearer ' + value.token
+            headers['authorization'] = 'Bearer ' + value.token
         }
     })
 
@@ -104,15 +104,22 @@ export function getSinglePostSuccess(data) {
  * @method updateDataById
  * @description post data from dummy api
  */
-export function updateDataById(id, callback) {
+export function updateDataById(params, callback) {
+    let id = params.id
+    var data = JSON.stringify({
+        title: params.title,
+        content: params.content
+    })
+
     return (dispatch) => {
-        axios.put(`${API.getPost}/${id}`, { headers })
+        axios.put(`${API.getPost}/${params.id}`, data, { headers })
             .then((response) => {
-                alert(JSON.stringify(response))
+                console.log("response " + JSON.stringify(response))
                 callback(response);
                 dispatch(getUpdatePostSuccess(response.data))
             })
             .catch((error) => {
+                alert(JSON.stringify(error))
                 callback(error);
                 dispatch(getFailure(error.response.status))
             });
