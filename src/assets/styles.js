@@ -107,7 +107,8 @@ export default StyleSheet.create({
         fontFamily: 'Helvetica'
     },
     flexDirectionStyle: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'flex-start'
     },
     actionButtons: {
         flex: 1,
