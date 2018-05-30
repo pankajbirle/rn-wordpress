@@ -9,6 +9,27 @@ import { List, ListItem, Container, Header, Content, Card, CardItem, Thumbnail, 
 
 export default class Drawer extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            userDisplayName: '',
+            userEmail: ''
+        }
+    }
+
+    componentDidMount() {
+        AsyncStorage.getItem('userResponse')
+            .then((value) => {
+                if (value != null) {
+                    value = JSON.parse(value);
+                    this.setState({
+                        userDisplayName: value.user_display_name,
+                        userEmail: value.user_email
+                    })
+                }
+            })
+    }
+
     /**
      * @method onPress
      * @description Navigate to tab screen on button press
@@ -43,6 +64,7 @@ export default class Drawer extends Component {
      * @description render component
      */
     render() {
+        const { userDisplayName, userEmail } = this.state
         return (
             <Container>
                 <Content>
@@ -51,8 +73,8 @@ export default class Drawer extends Component {
                             <Left>
                                 <Thumbnail source={{ uri: 'https://i.ytimg.com/vi/TZ7aoZG11Cc/maxresdefault.jpg' }} />
                                 <Body>
-                                    <Text>NativeBase</Text>
-                                    <Text note>GeekyAnts</Text>
+                                    <Text>{userDisplayName}</Text>
+                                    <Text note ellipsizeMode='tail' numberOfLines={1}>{userEmail}</Text>
                                 </Body>
                             </Left>
                         </CardItem>
