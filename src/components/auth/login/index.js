@@ -53,14 +53,14 @@ class Login extends ValidationComponent {
             this.setState({ loading: true })
             this.props.loginUser(name, password, (res) => {
                 this.setState({ loading: false })
-                if (res.response.status != 200 && res.response.status != 204) {
-                    if (res.response.status == 404) {
+                if (res.status != 200 && res.status != 204) {
+                    if (res.status == 404) {
                         this.setState({
-                            visible: true, message: res.response.status, toastBgColor: 'red'
+                            visible: true, message: res.status, toastBgColor: 'red'
                         })
-                    } else if (res.response.status == 401) {
+                    } else if (res.status == 401) {
                         this.setState({
-                            visible: true, message: res.response.status, toastBgColor: 'red'
+                            visible: true, message: res.status, toastBgColor: 'red'
                         })
                     } else {
                         this.setState({
