@@ -1,4 +1,19 @@
 import axios from 'axios';
+import { AsyncStorage } from 'react-native'
+
+var headers = {
+    'Content-Type': 'application/json',
+}
+
+AsyncStorage.getItem('userResponse')
+    .then((value) => {
+        if (value != null) {
+            value = JSON.parse(value)
+            headers['Authorization'] = 'Bearer ' + value.token
+        }
+    })
+
+
 import {
     FETCHING_POST, FETCHING_POST_SUCCESS,
     UPDATING_POST, UPDATING_POST_SUCCESS,
@@ -14,7 +29,7 @@ import { API } from '../config';
 export function fetchPostsFromAPI() {
     return (dispatch) => {
         dispatch(getPost())
-        axios.get(API.getPost)
+        axios.get(API.getPost, { headers })
             .then((response) => {
                 dispatch(getPostSuccess(response.data))
             })
@@ -49,7 +64,7 @@ export function getPostSuccess(data) {
  * @method getDataById
  * @description get data from dummy api
  */
-export function getDataById(id,callback) {
+export function getDataById(id, callback) {
     return (dispatch) => {
         dispatch(getSinglePost())
         axios.get(`${API.getPost}/${id}`)
@@ -91,8 +106,9 @@ export function getSinglePostSuccess(data) {
  */
 export function updateDataById(id, callback) {
     return (dispatch) => {
-        axios.put(`${API.getPost}/${id}`)
+        axios.put(`${API.getPost}/${id}`, { headers })
             .then((response) => {
+                alert(JSON.stringify(response))
                 callback(response);
                 dispatch(getUpdatePostSuccess(response.data))
             })

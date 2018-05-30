@@ -68,7 +68,7 @@ class EditPost extends Component {
         }
 
         //  alert(JSON.stringify(requestParams));
-        this.props.updateDataById(requestParams, res => {
+        this.props.updateDataById(this.state.postId, res => {
             let status = res.response.data.data.status;
             if (status != 200 && status != 204) {
                 if (status == 404) {

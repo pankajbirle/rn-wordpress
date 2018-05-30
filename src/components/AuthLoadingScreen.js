@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import styles from "../assets/styles";
 
+import { AUTH } from '../constants'
+
 export default class AuthLoadingScreen extends React.Component {
     constructor(props) {
         super(props);
