@@ -105,7 +105,6 @@ export function getSinglePostSuccess(data) {
  * @description post data from dummy api
  */
 export function updateDataById(params, callback) {
-    let id = params.id
     var data = JSON.stringify({
         title: params.title,
         content: params.content
@@ -143,7 +142,7 @@ export function getUpdatePostSuccess(data) {
  */
 export function deleteDataById(id, callback) {
     return (dispatch) => {
-        axios.delete(`${API.getPost}/${id}`)
+        axios.delete(`${API.getPost}/${id}`, { headers })
             .then((response) => {
                 callback(response);
                 dispatch(getDeletePostSuccess(response.data))
