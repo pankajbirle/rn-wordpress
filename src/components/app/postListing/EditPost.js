@@ -81,6 +81,9 @@ class EditPost extends Component {
                     })
                 }
             } else {
+                this.setState({
+                    visible: true, message: "This post has been updated successfully", toastBgColor: 'green'
+                })
                 this.props.navigation.navigate('PostListing');
             }
         })
@@ -152,7 +155,6 @@ class EditPost extends Component {
 * @param {*} state
                                     */
 function mapStateToProps(state) {
-
     return {
         isFetching: state.posts.isFetching
     }
