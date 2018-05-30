@@ -126,6 +126,30 @@ export function updateDataById(params, callback) {
 }
 
 /**
+ * @method addPost
+ * @description create post
+ */
+export function addPost(params, callback) {
+    var data = JSON.stringify({
+        title: params.title,
+        content: params.content
+    })
+
+    return (dispatch) => {
+        axios.post(`${API.getPost}`, data, { headers })
+            .then((response) => {
+                console.log("response " + JSON.stringify(response))
+                callback(response);
+                dispatch(getUpdatePostSuccess(response.data))
+            })
+            .catch((error) => {
+                callback(error);
+                dispatch(getFailure(error.response.status))
+            });
+    }
+}
+
+/**
  * @method getUpdatePostSuccess
  * @description return object containing action type
  */

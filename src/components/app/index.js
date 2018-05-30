@@ -10,6 +10,7 @@ import TabScreen from './tab-screen';
 import UploadScreen from './upload';
 import ConfirmationScreen from './confirm';
 import PostListing from './postListing';
+import AddPost from './AddPost';
 import EditPost from './postListing/EditPost';
 import { DrawerNavigator } from 'react-navigation';
 import { Root } from 'native-base';
@@ -18,6 +19,9 @@ const AppStack = DrawerNavigator(
     {
         PostListing: {
             screen: PostListing
+        },
+        AddPost: {
+            screen: AddPost
         },
         EditPost: {
             screen: EditPost

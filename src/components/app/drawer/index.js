@@ -46,8 +46,8 @@ export default class Drawer extends Component {
         this.props.navigation.navigate('ConfirmationScreen');
     }
 
-    postListing = () => () => {
-        this.props.navigation.navigate('PostListing');
+    navigate = (path) => () => {
+        this.props.navigation.navigate(path);
     }
 
     /**
@@ -81,7 +81,10 @@ export default class Drawer extends Component {
                     </Card>
                     <List>
                         <ListItem>
-                            <Text onPress={this.postListing()}>API Listing</Text>
+                            <Text onPress={this.navigate('PostListing')}>API Listing</Text>
+                        </ListItem>
+                        <ListItem>
+                            <Text onPress={this.navigate('AddPost')}>Add Post</Text>
                         </ListItem>
                         <ListItem>
                             <Text onPress={this.onLogout()}>Logout</Text>
