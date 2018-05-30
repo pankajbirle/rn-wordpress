@@ -1,8 +1,9 @@
 import {
 	FETCHING_POST, FETCHING_POST_SUCCESS,
 	UPDATING_POST, UPDATING_POST_SUCCESS,
-	GET_POST, GET_POST_SUCCESS, FAILURE, 
-	DELETING_POST_SUCCESS
+	GET_POST, GET_POST_SUCCESS, FAILURE,
+	DELETING_POST_SUCCESS,
+	DELETE_START, DELETE_END, FETCHING_POST_FAILED, POST_EDIT_BEGIN, POST_EDIT_END, ADDING_POST_START, ADDING_POST_END
 } from '../constants';
 
 /** Always define initialState in reducer so that we don't get undefined values */
@@ -10,7 +11,11 @@ const initialState = {
 	isFetching: false,
 	error: false,
 	posts: [],
-	singlePost: []
+	singlePost: [],
+	fetchingAllPosts: false,
+	isDeleting: false,
+	isEditing: false,
+	isAdding: false
 }
 
 /**
@@ -25,13 +30,18 @@ export default function postsReducer(state = initialState, action) {
 			return {
 				...state,
 				posts: [],
-				isFetching: true
+				fetchingAllPosts: true
 			}
 		case FETCHING_POST_SUCCESS:
 			return {
 				...state,
-				isFetching: false,
+				fetchingAllPosts: false,
 				posts: action.data
+			}
+		case FETCHING_POST_FAILED:
+			return {
+				...state,
+				fetchingAllPosts: false,
 			}
 		case GET_POST:
 			return {
@@ -50,10 +60,20 @@ export default function postsReducer(state = initialState, action) {
 				...state,
 				isFetching: true
 			}
+		case POST_EDIT_BEGIN:
+			return {
+				...state,
+				isEditing: true
+			}
+		case POST_EDIT_END:
+			return {
+				...state,
+				isEditing: false
+			}
 		case UPDATING_POST_SUCCESS:
 			return {
 				...state,
-				isFetching: false,
+				isEditing: false,
 			}
 		case FAILURE:
 			return {
@@ -64,7 +84,28 @@ export default function postsReducer(state = initialState, action) {
 		case DELETING_POST_SUCCESS:
 			return {
 				...state,
-				isFetching: false,
+				isDeleting: false
+			}
+		case DELETE_START:
+			return {
+				...state,
+				isDeleting: true
+			}
+		case DELETE_END:
+			return {
+				...state,
+				isDeleting: false
+			}
+
+		case ADDING_POST_START:
+			return {
+				...state,
+				isAdding: true
+			}
+		case ADDING_POST_END:
+			return {
+				...state,
+				isAdding: false
 			}
 		default:
 			return state

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styles from '../../../assets/styles';
 import { getDataById, updateDataById } from '../../../actions/Posts';
-import { HeaderComponent, ToastComponent } from '../../common';
+import { HeaderComponent, ToastComponent, Spinner } from '../../common';
 
 import {
-    View, Text, ActivityIndicator, FlatList, TouchableOpacity, TextInput, Button
+    View, Text, FlatList, TouchableOpacity, TextInput, Button
 } from 'react-native';
 
 import {
@@ -104,7 +104,7 @@ class EditPost extends Component {
      * @description Renders the component
      */
     render() {
-        const isFetching = this.props.isFetching;
+        const { isEditing, isFetching } = this.props.postReducer
         return (
             <Container>
                 <HeaderComponent
@@ -129,9 +129,6 @@ class EditPost extends Component {
                             onChangeText={(content) => this.setState({ content })}
                             value={this.state.content}
                         />
-                        <ActivityIndicator
-                            animating={isFetching} size="large"
-                        />
                     </Card>
                     <Button
                         title='Update'
@@ -144,6 +141,9 @@ class EditPost extends Component {
                         message={this.state.message}
                     />
                 </Content>
+                {isFetching || isEditing && (
+                    <Spinner />
+                )}
             </Container>
         )
     }
@@ -156,7 +156,8 @@ class EditPost extends Component {
                                     */
 function mapStateToProps(state) {
     return {
-        isFetching: state.posts.isFetching
+        isFetching: state.posts.isFetching,
+        postReducer: state.posts
     }
 }
 

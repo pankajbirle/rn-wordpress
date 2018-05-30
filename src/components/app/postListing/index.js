@@ -131,7 +131,7 @@ class PostListing extends Component {
     render() {
         const post = this.props.posts;
         const isFetching = this.props.isFetching;
-
+        const { fetchingAllPosts, isDeleting } = this.props.postReducer
         return (
             <Container>
                 <HeaderComponent
@@ -178,10 +178,15 @@ class PostListing extends Component {
                         onShow={this.hideToast}
                         message={this.state.message}
                     />
-                    <ActivityIndicator
-                        animating={isFetching} size="large"
-                    />
                 </Content>
+                {isFetching || fetchingAllPosts || isDeleting && (
+                    <View style={styles.loaderWrap}>
+                        <ActivityIndicator
+                            size="large"
+                            style={styles.loader}
+                        />
+                    </View>
+                )}
             </Container>
         )
     }
@@ -195,7 +200,8 @@ class PostListing extends Component {
 function mapStateToProps(state) {
     return {
         posts: state.posts.posts,
-        isFetching: state.posts.isFetching
+        isFetching: state.posts.isFetching,
+        postReducer: state.posts
     }
 }
 

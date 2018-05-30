@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styles from '../../../assets/styles';
 import { addPost } from '../../../actions/Posts';
-import { HeaderComponent, ToastComponent } from '../../common';
+import { HeaderComponent, ToastComponent, Spinner } from '../../common';
 
 import {
-    View, Text, ActivityIndicator, FlatList, TouchableOpacity, TextInput, Button
+    View, Text, FlatList, TouchableOpacity, TextInput, Button
 } from 'react-native';
 
 import {
@@ -37,7 +37,7 @@ class AddPost extends Component {
      */
     updatePost = () => {
         const { title, content } = this.state;
-        let requestParams = { title, content };
+        let requestParams = { title, content, status: 'publish' };
 
         //  alert(JSON.stringify(requestParams));
         this.props.addPost(requestParams, res => {
@@ -83,7 +83,7 @@ class AddPost extends Component {
      * @description Renders the component
      */
     render() {
-        const isFetching = this.props.isFetching;
+        const { isAdding } = this.props.postReducer
         return (
             <Container>
                 <HeaderComponent
@@ -98,6 +98,7 @@ class AddPost extends Component {
                                     style={styles.title}
                                     onChangeText={(title) => this.setState({ title })}
                                     value={this.state.title}
+                                    placeholder='Post Title'
                                 />
                             </View>
                         </View>
@@ -107,9 +108,7 @@ class AddPost extends Component {
                             style={styles.post}
                             onChangeText={(content) => this.setState({ content })}
                             value={this.state.content}
-                        />
-                        <ActivityIndicator
-                            animating={isFetching} size="large"
+                            placeholder='Post Content'
                         />
                     </Card>
                     <Button
@@ -123,6 +122,9 @@ class AddPost extends Component {
                         message={this.state.message}
                     />
                 </Content>
+                {isAdding && (
+                    <Spinner />
+                )}
             </Container>
         )
     }
@@ -136,7 +138,7 @@ class AddPost extends Component {
 function mapStateToProps(state) {
 
     return {
-        isFetching: state.posts.isFetching
+        postReducer: state.posts
     }
 }
 

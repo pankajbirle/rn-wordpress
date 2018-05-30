@@ -10,6 +10,7 @@ import { StyleSheet, Platform, Dimensions } from 'react-native';
 var headerHeight = Platform.OS === 'ios' ? 108 : 100;
 var deviceWidth = (Dimensions.get('window').width);
 var deviceHeight = (Dimensions.get('window').height) - headerHeight;
+var actualDeviceHeight = (Dimensions.get('window').height)
 
 export default StyleSheet.create({
     container: {
@@ -111,6 +112,7 @@ export default StyleSheet.create({
     actionButtons: {
         flex: 1,
         justifyContent: 'flex-end',
+        alignItems: 'flex-start',
         flexDirection: 'row'
     },
     editIcon: {
@@ -130,5 +132,19 @@ export default StyleSheet.create({
     },
     cardStyle: {
         padding: 10
+    },
+    loaderWrap: {
+        position: 'absolute',
+        width: deviceWidth,
+        height: actualDeviceHeight,
+        zIndex: 999,
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        top: 0,
+        justifyContent: 'center'
+    },
+    loader: {
+        // position: 'absolute',
+        alignSelf: 'center',
+        zIndex: 999
     }
 })

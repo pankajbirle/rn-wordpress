@@ -18,7 +18,7 @@ import {
     FETCHING_POST, FETCHING_POST_SUCCESS,
     UPDATING_POST, UPDATING_POST_SUCCESS,
     GET_POST, GET_POST_SUCCESS, FAILURE,
-    DELETING_POST_SUCCESS
+    DELETING_POST_SUCCESS, DELETE_START, DELETE_END, FETCHING_POST_FAILED, POST_EDIT_BEGIN, POST_EDIT_END, ADDING_POST_END, ADDING_POST_START
 } from '../constants';
 import { API } from '../config';
 
@@ -29,12 +29,13 @@ import { API } from '../config';
 export function fetchPostsFromAPI() {
     return (dispatch) => {
         dispatch(getPost())
-        axios.get(API.getPost, { headers })
+        axios.get(`${API.getPost}?per_page=100`, { headers })
             .then((response) => {
                 dispatch(getPostSuccess(response.data))
             })
             .catch((error) => {
                 dispatch(getFailure(error))
+                dispatch({ type: FETCHING_POST_FAILED })
             });
     }
 }
@@ -111,6 +112,7 @@ export function updateDataById(params, callback) {
     })
 
     return (dispatch) => {
+        dispatch({ type: POST_EDIT_BEGIN })
         axios.put(`${API.getPost}/${params.id}`, data, { headers })
             .then((response) => {
                 console.log("response " + JSON.stringify(response))
@@ -121,6 +123,7 @@ export function updateDataById(params, callback) {
                 alert(JSON.stringify(error))
                 callback(error);
                 dispatch(getFailure(error.response.status))
+                dispatch({ type: POST_EDIT_END })
             });
     }
 }
@@ -132,19 +135,22 @@ export function updateDataById(params, callback) {
 export function addPost(params, callback) {
     var data = JSON.stringify({
         title: params.title,
-        content: params.content
+        content: params.content,
+        status: params.status
     })
 
     return (dispatch) => {
+        dispatch({ type: ADDING_POST_START })
         axios.post(`${API.getPost}`, data, { headers })
             .then((response) => {
                 console.log("response " + JSON.stringify(response))
+                dispatch({ type: ADDING_POST_END })
                 callback(response);
-                dispatch(getUpdatePostSuccess(response.data))
             })
             .catch((error) => {
                 callback(error);
                 dispatch(getFailure(error.response.status))
+                dispatch({ type: ADDING_POST_END })
             });
     }
 }
@@ -166,6 +172,7 @@ export function getUpdatePostSuccess(data) {
  */
 export function deleteDataById(id, callback) {
     return (dispatch) => {
+        dispatch({ type: DELETE_START })
         axios.delete(`${API.getPost}/${id}`, { headers })
             .then((response) => {
                 callback(response);
@@ -174,6 +181,7 @@ export function deleteDataById(id, callback) {
             .catch((error) => {
                 callback(error);
                 dispatch(getFailure(error))
+                dispatch({ type: DELETE_END })
             });
     }
 }
