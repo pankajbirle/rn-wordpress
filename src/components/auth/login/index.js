@@ -72,7 +72,7 @@ class Login extends ValidationComponent {
                         visible: true, message: 'Success', toastBgColor: 'green'
                     })
                     alert("You are successfully logged in!");
-                    AsyncStorage.setItem('isLoggedIn', 'true');
+                    AsyncStorage.setItem('userResponse', JSON.stringify(res.data));
                     this.props.navigation.navigate('AuthLoading');
                 }
             })
