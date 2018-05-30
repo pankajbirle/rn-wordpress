@@ -8,7 +8,8 @@ import {
     Text,
     ActivityIndicator,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 import {
     Header,
@@ -59,19 +60,34 @@ class PostListing extends Component {
     }
 
     /**
+     * @method deleteSelectedPost
+     * @description Function to delete Post
+     */
+    deleteSelectedPost = (id) => {
+        Alert.alert(
+            'Alert',
+            'Are you sure you want to delete this post?',
+            [
+                { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
+                { text: 'Yes', onPress: () => this.deletePost(id), style: 'cancel' },
+            ],
+            { cancelable: false }
+        )
+    }
+
+    /**
      * @method deletePost
      * @description Function to delete Post
      */
     deletePost = (id) => {
         // alert(id);
         this.props.deleteDataById(id, res => {
-            console.log(res.response.status + " " + JSON.stringify(res));
-            if (res.response.status != 200 && res.response.status != 204) {
-                if (res.response.status == 404) {
+            if (res.status != 200 && res.status != 204) {
+                if (res.status == 404) {
                     this.setState({
                         visible: true, message: res.response.data.message, toastBgColor: 'red'
                     })
-                } else if (res.response.status == 401) {
+                } else if (res.status == 401) {
                     this.setState({
                         visible: true, message: res.response.data.message, toastBgColor: 'red'
                     })
@@ -83,8 +99,9 @@ class PostListing extends Component {
                 }
             } else {
                 this.setState({
-                    visible: true, message: 'Success', toastBgColor: 'green'
+                    visible: true, message: 'The post has been deleted successfully.', toastBgColor: 'green'
                 })
+                this.props.fetchPostsFromAPI();
             }
         })
     }
@@ -140,7 +157,7 @@ class PostListing extends Component {
                                                 <Text>Edit  </Text>
                                             </View>
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={() => this.deletePost(item.id)}>
+                                        <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={() => this.deleteSelectedPost(item.id)}>
                                             <View style={styles.flexDirectionStyle}>
                                                 <Icon style={styles.deleteIcon} name='ios-trash-outline'></Icon>
                                                 <Text> Delete</Text>

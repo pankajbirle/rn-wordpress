@@ -8,6 +8,7 @@ import configureStore from './src/configureStore';
 import App from './src';
 import { Root } from "native-base";
 const store = configureStore();
+console.disableYellowBox = true;
 
 YellowBox.ignoreWarnings(['Warning: isMounted(...) is deprecated', 'Module RCTImageLoader']);
 
