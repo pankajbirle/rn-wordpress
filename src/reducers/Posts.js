@@ -3,14 +3,14 @@ import {
 	UPDATING_POST, UPDATING_POST_SUCCESS,
 	GET_POST, GET_POST_SUCCESS, FAILURE,
 	DELETING_POST_SUCCESS,
-	DELETE_START, DELETE_END, FETCHING_POST_FAILED, POST_EDIT_BEGIN, POST_EDIT_END, ADDING_POST_START, ADDING_POST_END
+	DELETE_START, DELETE_END, FETCHING_POST_END, POST_EDIT_BEGIN, POST_EDIT_END, ADDING_POST_START, ADDING_POST_END
 } from '../constants';
 
 /** Always define initialState in reducer so that we don't get undefined values */
 const initialState = {
 	isFetching: false,
 	error: false,
-	posts: [],
+	posts: null,
 	singlePost: [],
 	fetchingAllPosts: false,
 	isDeleting: false,
@@ -29,16 +29,15 @@ export default function postsReducer(state = initialState, action) {
 		case FETCHING_POST:
 			return {
 				...state,
-				posts: [],
+				posts: null,
 				fetchingAllPosts: true
 			}
 		case FETCHING_POST_SUCCESS:
 			return {
 				...state,
-				fetchingAllPosts: false,
 				posts: action.data
 			}
-		case FETCHING_POST_FAILED:
+		case FETCHING_POST_END:
 			return {
 				...state,
 				fetchingAllPosts: false,

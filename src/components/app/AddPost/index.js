@@ -5,14 +5,15 @@ import { addPost } from '../../../actions/Posts';
 import { HeaderComponent, ToastComponent, Spinner } from '../../common';
 
 import {
-    View, Text, FlatList, TouchableOpacity, TextInput, Button
+    View, Text, FlatList, TouchableOpacity, TextInput
 } from 'react-native';
+import { ValidationComponent } from '../../../helper';
 
 import {
-    Header, Body, Container, Content, Icon, Card
+    Header, Body, Container, Content, Icon, Card, Button
 } from 'native-base';
 
-class AddPost extends Component {
+class AddPost extends ValidationComponent {
 
     constructor(props) {
         super(props);
@@ -22,14 +23,49 @@ class AddPost extends Component {
             postId: '',
             showToast: false,
             visible: false,
-            toastBgColor: 'green'
+            toastBgColor: 'green',
+            isSubmitted: false,
         }
     }
 
     /**
-     * @method componentDidMount
-     * @description Code some necessary actions to be taken as soon as component mounts
-     */
+* @method checkValidation
+* @description called to check validations
+*/
+    checkValidation = () => {
+        /* Call ValidationComponent validate method */
+        this.validate({
+            title: {
+                required: true,
+            },
+            content: {
+                required: true,
+            }
+        });
+        this.setState({ error: true });
+    }
+
+    /**
+ * @method onInputValueChanged
+ * @description called when input field value changes
+ */
+    onInputValueChanged = (key) => (value) => {
+        this.changeValue(key, value);
+    }
+
+    /**
+ * @method changeValue
+ * @description called
+ */
+    changeValue = (key, value) => {
+        const state = this.state;
+        state[key] = value;
+        this.setState(state, () => {
+            if (this.state.isSubmitted) {
+                this.checkValidation();
+            }
+        })
+    }
 
     /**
      * @method updatePost
@@ -39,6 +75,11 @@ class AddPost extends Component {
         const { title, content } = this.state;
         let requestParams = { title, content, status: 'publish' };
 
+        this.setState({ isSubmitted: true });
+        this.checkValidation();
+        if (this.getErrorMessages()) {
+
+        } else {
         //  alert(JSON.stringify(requestParams));
         this.props.addPost(requestParams, res => {
             let status = res.status;
@@ -63,9 +104,10 @@ class AddPost extends Component {
                 })
                 setTimeout(() => {
                     this.props.navigation.navigate('PostListing');
-                }, 2000);
+                }, 500);
             }
         })
+    }
     }
 
     /**
@@ -75,7 +117,7 @@ class AddPost extends Component {
     hideToast = () => {
         setTimeout(() => this.setState({
             visible: false
-        }), 2000); /** hide toast after 2s */
+        }), 500); /** hide toast after 2s */
     }
 
     /**
@@ -92,29 +134,39 @@ class AddPost extends Component {
                 />
                 <Content style={styles.contentStyle}>
                     <Card style={styles.cardStyle}>
-                        <View style={styles.flexDirectionStyle}>
+                        <View>
                             <View style={styles.viewTitle}>
                                 <TextInput
                                     style={styles.title}
-                                    onChangeText={(title) => this.setState({ title })}
+                                    onChangeText={this.onInputValueChanged('title')}
                                     value={this.state.title}
                                     placeholder='Post Title'
+                                    maxLength={50}
                                 />
+                                {this.isFieldInError('title') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('title')}</Text>}
+
                             </View>
                         </View>
                         <TextInput
                             multiline={true}
                             numberOfLines={4}
                             style={styles.post}
-                            onChangeText={(content) => this.setState({ content })}
+                            onChangeText={this.onInputValueChanged('content')}
                             value={this.state.content}
                             placeholder='Post Content'
                         />
+                        {this.isFieldInError('content') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('content')}</Text>}
+
                     </Card>
                     <Button
-                        title='Add'
                         onPress={this.updatePost}
-                    />
+                        block
+                        info
+                        style={{ margin: 2 }}
+                    >
+                        <Text style={{ color: '#fff' }}>Add</Text>
+                    </Button>
+
                     <ToastComponent
                         visible={this.state.visible}
                         backgroundColor={this.state.toastBgColor}

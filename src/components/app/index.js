@@ -11,6 +11,7 @@ import UploadScreen from './upload';
 import ConfirmationScreen from './confirm';
 import PostListing from './postListing';
 import AddPost from './AddPost';
+import SinglePost from './SinglePost';
 import EditPost from './postListing/EditPost';
 import { DrawerNavigator } from 'react-navigation';
 import { Root } from 'native-base';
@@ -25,6 +26,9 @@ const AppStack = DrawerNavigator(
         },
         EditPost: {
             screen: EditPost
+        },
+        SinglePost: {
+            screen: SinglePost
         }
     }, {
         contentComponent: DrawerComponent, /** This is our custom drawer component */

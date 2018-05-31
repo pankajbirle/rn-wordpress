@@ -18,7 +18,7 @@ import {
     FETCHING_POST, FETCHING_POST_SUCCESS,
     UPDATING_POST, UPDATING_POST_SUCCESS,
     GET_POST, GET_POST_SUCCESS, FAILURE,
-    DELETING_POST_SUCCESS, DELETE_START, DELETE_END, FETCHING_POST_FAILED, POST_EDIT_BEGIN, POST_EDIT_END, ADDING_POST_END, ADDING_POST_START
+    DELETING_POST_SUCCESS, DELETE_START, DELETE_END, FETCHING_POST_END, POST_EDIT_BEGIN, POST_EDIT_END, ADDING_POST_END, ADDING_POST_START
 } from '../constants';
 import { API } from '../config';
 
@@ -29,13 +29,15 @@ import { API } from '../config';
 export function fetchPostsFromAPI() {
     return (dispatch) => {
         dispatch(getPost())
-        axios.get(`${API.getPost}?per_page=100`, { headers })
+        axios.get(`${API.getPost}?_embed&per_page=100`, { headers })
             .then((response) => {
+                // alert(JSON.stringify(response))
                 dispatch(getPostSuccess(response.data))
+                dispatch({ type: FETCHING_POST_END })
             })
             .catch((error) => {
                 dispatch(getFailure(error))
-                dispatch({ type: FETCHING_POST_FAILED })
+                dispatch({ type: FETCHING_POST_END })
             });
     }
 }
@@ -120,7 +122,6 @@ export function updateDataById(params, callback) {
                 dispatch(getUpdatePostSuccess(response.data))
             })
             .catch((error) => {
-                alert(JSON.stringify(error))
                 callback(error);
                 dispatch(getFailure(error.response.status))
                 dispatch({ type: POST_EDIT_END })

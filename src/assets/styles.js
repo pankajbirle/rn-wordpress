@@ -99,8 +99,12 @@ export default StyleSheet.create({
     },
     title: {
         fontSize: 16,
-        color: '#f26568',
         fontFamily: 'Helvetica'
+    },
+    listItemTitle: {
+        fontSize: 16,
+        fontFamily: 'Helvetica',
+        color: '#f26568'
     },
     post: {
         fontSize: 14,
@@ -108,13 +112,18 @@ export default StyleSheet.create({
     },
     flexDirectionStyle: {
         flexDirection: 'row',
-        alignItems: 'flex-start'
+        // alignItems: 'flex-start'
     },
     actionButtons: {
-        flex: 1,
-        justifyContent: 'flex-end',
+        // flex: 1,
+        justifyContent: 'flex-start',
         alignItems: 'flex-start',
         flexDirection: 'row'
+    },
+    postActionButtonWrap: {
+        alignSelf: 'flex-end',
+        paddingRight: 3,
+        marginTop: 5
     },
     editIcon: {
         color: '#017F4B',
@@ -124,15 +133,21 @@ export default StyleSheet.create({
         color: '#F95534',
         fontSize: 20
     },
+    viewIcon: {
+        color: '#000',
+        fontSize: 20
+    },
     viewTitle: {
-        alignSelf: 'flex-start',
-        flex: 1
+        // alignSelf: 'flex-start',
+        // flex: 1
     },
     contentStyle: {
-        backgroundColor: '#e7e5e5'
+        backgroundColor: '#e7e5e5',
+        paddingLeft: 5,
+        paddingRight: 5
     },
     cardStyle: {
-        padding: 10
+        padding: 10,
     },
     loaderWrap: {
         position: 'absolute',
@@ -147,5 +162,8 @@ export default StyleSheet.create({
         // position: 'absolute',
         alignSelf: 'center',
         zIndex: 999
+    },
+    headerPostButton: {
+        color: '#fff'
     }
 })

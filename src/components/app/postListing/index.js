@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import styles from '../../../assets/styles';
 import { fetchPostsFromAPI, deleteDataById } from '../../../actions/Posts';
-import { HeaderComponent, ToastComponent } from '../../common';
+import { HeaderComponent, ToastComponent, Spinner, Confirm } from '../../common';
 import {
     View,
     Text,
@@ -12,16 +12,10 @@ import {
     Alert
 } from 'react-native';
 import {
-    Header,
-    Body,
-    Container,
-    Content,
-    Icon,
-    Card,
-    Footer,
-    Button
+    Header, Body, Container, Content, Icon, Card, Footer, Button, CardItem, Left, Right
 } from 'native-base';
 import HTMLView from 'react-native-htmlview';
+import { capitalizeFirstLetter, formatDate } from '../../../helper'
 
 class PostListing extends Component {
 
@@ -30,7 +24,8 @@ class PostListing extends Component {
         this.state = {
             showToast: false,
             visible: false,
-            toastBgColor: 'green'
+            toastBgColor: 'green',
+            showConfirm: false
         }
     }
 
@@ -64,23 +59,19 @@ class PostListing extends Component {
      * @description Function to delete Post
      */
     deleteSelectedPost = (id) => {
-        Alert.alert(
-            'Alert',
-            'Are you sure you want to delete this post?',
-            [
-                { text: 'No', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-                { text: 'Yes', onPress: () => this.deletePost(id), style: 'cancel' },
-            ],
-            { cancelable: false }
-        )
+        this.setState({
+            showConfirm: true,
+            deleteId: id
+        })
     }
 
     /**
      * @method deletePost
      * @description Function to delete Post
      */
-    deletePost = (id) => {
-        // alert(id);
+    deletePost = () => () => {
+        let id = this.state.deleteId
+        this.setState({ showConfirm: false })
         this.props.deleteDataById(id, res => {
             if (res.status != 200 && res.status != 204) {
                 if (res.status == 404) {
@@ -129,49 +120,75 @@ class PostListing extends Component {
      * @description Renders the component
      */
     render() {
-        const post = this.props.posts;
-        const isFetching = this.props.isFetching;
-        const { fetchingAllPosts, isDeleting } = this.props.postReducer
+        const { fetchingAllPosts, isDeleting, posts } = this.props.postReducer
+        const { showConfirm } = this.state
+        const showLoader = (fetchingAllPosts || isDeleting || (posts == null))
         return (
             <Container>
                 <HeaderComponent
                     title='Posts'
                     leftButton='menu'
+                    renderRightComponent={() => (
+                        <Text style={styles.headerPostButton} onPress={() => this.props.navigation.navigate("AddPost")}>Add Post</Text>
+                    )}
                 />
                 <Content style={styles.contentStyle}>
-                    <FlatList
-                        data={post}
-                        extraData={this.props}
-                        style={styles.myList}
-                        keyExtractor={this.keyExtractor}
-                        renderItem={({ item }) => (
-                            <Card style={styles.cardStyle}>
-                                <View style={styles.flexDirectionStyle}>
-                                    <View style={styles.viewTitle}>
-                                        <Text style={styles.title}>{item.title.rendered}</Text>
-                                    </View>
-                                    <View style={styles.actionButtons}>
-                                        <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={() => this.editPost(item.id)}>
-                                            <View style={styles.flexDirectionStyle}>
-                                                <Icon style={styles.editIcon} name='ios-create-outline'></Icon>
-                                                <Text>Edit  </Text>
+                    {posts != null && (
+                        <FlatList
+                            data={posts}
+                            extraData={this.props}
+                            style={styles.myList}
+                            keyExtractor={this.keyExtractor}
+                            renderItem={({ item }) => (
+                                <Card>
+                                    <CardItem bordered>
+                                        <Body>
+                                            <View>
+                                                <View style={styles.viewTitle}>
+                                                    <Text onPress={() => this.props.navigation.navigate('SinglePost', { item })} style={styles.listItemTitle}>{item.title.rendered}</Text>
+                                                </View>
+                                                <View style={styles.actionButtons}>
+                                                    <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.editPost(item.id)}>
+                                                        <View style={styles.flexDirectionStyle}>
+                                                            <Icon style={styles.editIcon} name='ios-create-outline'></Icon>
+                                                            <Text>Edit  </Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.deleteSelectedPost(item.id)}>
+                                                        <View style={styles.flexDirectionStyle}>
+                                                            <Icon style={styles.deleteIcon} name='ios-trash-outline'></Icon>
+                                                            <Text> Delete  </Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.props.navigation.navigate("SinglePost", { item })}>
+                                                        <View style={styles.flexDirectionStyle}>
+                                                            <Icon style={styles.viewIcon} name='ios-eye-outline'></Icon>
+                                                            <Text> View</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                </View>
                                             </View>
-                                        </TouchableOpacity>
-                                        <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={() => this.deleteSelectedPost(item.id)}>
-                                            <View style={styles.flexDirectionStyle}>
-                                                <Icon style={styles.deleteIcon} name='ios-trash-outline'></Icon>
-                                                <Text> Delete</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                    </View>
+                                        </Body>
+                                    </CardItem>
 
-                                </View>
-                                <HTMLView
-                                    value={item.content.rendered}
-                                />
-                            </Card>
-                        )}
-                    />
+                                    <CardItem bordered>
+                                        <Body>
+                                            <Text ellipsizeMode='tail' numberOfLines={4}>{item.content.rendered}</Text>
+                                        </Body>
+                                    </CardItem>
+
+                                    <CardItem footer bordered>
+                                        <Left>
+                                            <Text>{capitalizeFirstLetter(item._embedded.author[0].name)}</Text>
+                                        </Left>
+                                        <Right>
+                                            <Text>{formatDate(new Date(item.date))}</Text>
+                                        </Right>
+                                    </CardItem>
+                                </Card>
+                            )}
+                        />
+                    )}
                     <ToastComponent
                         visible={this.state.visible}
                         backgroundColor={this.state.toastBgColor}
@@ -179,14 +196,18 @@ class PostListing extends Component {
                         message={this.state.message}
                     />
                 </Content>
-                {isFetching || fetchingAllPosts || isDeleting && (
-                    <View style={styles.loaderWrap}>
-                        <ActivityIndicator
-                            size="large"
-                            style={styles.loader}
-                        />
-                    </View>
+                {showLoader && (
+                    <Spinner />
                 )}
+                <Confirm
+                    show={showConfirm}
+                    title="Delete Post?"
+                    message="Are you sure you want to delete this post?"
+                    cancelText="No, cancel"
+                    confirmText="Yes, delete it"
+                    onCancelPressed={() => this.setState({ showConfirm: false })}
+                    onConfirmPressed={this.deletePost()}
+                />
             </Container>
         )
     }
@@ -199,8 +220,6 @@ class PostListing extends Component {
 */
 function mapStateToProps(state) {
     return {
-        posts: state.posts.posts,
-        isFetching: state.posts.isFetching,
         postReducer: state.posts
     }
 }

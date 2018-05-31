@@ -54,7 +54,11 @@ class Login extends ValidationComponent {
             this.props.loginUser(name, password, (res) => {
                 this.setState({ loading: false })
                 if (res.status != 200 && res.status != 204) {
-                    if (res.status == 404) {
+                    if (res.status == undefined) {
+                        this.setState({
+                            visible: true, message: "Invalid username/password", toastBgColor: 'red'
+                        })
+                    } else if (res.status == 404) {
                         this.setState({
                             visible: true, message: res.status, toastBgColor: 'red'
                         })
@@ -71,7 +75,6 @@ class Login extends ValidationComponent {
                     this.setState({
                         visible: true, message: 'Success', toastBgColor: 'green'
                     })
-                    alert("You are successfully logged in!");
                     AsyncStorage.setItem('userResponse', JSON.stringify(res.data));
                     this.props.navigation.navigate('AuthLoading');
                 }
@@ -134,7 +137,7 @@ class Login extends ValidationComponent {
                 <ActivityIndicator animating={loading} />
                 <View style={styles.m20}>
                     <TextInput
-                        placeholder='Name'
+                        placeholder='Username'
                         value={name}
                         onChangeText={this.onInputValueChanged('name')}
                     />

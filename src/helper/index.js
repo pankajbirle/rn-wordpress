@@ -33,4 +33,23 @@ export class Toast {
 
 }
 
+export function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+export function formatDate(date) {
+    var monthNames = [
+        "Jan", "Feb", "Mar",
+        "Apr", "May", "June", "July",
+        "Aug", "Sept", "Oct",
+        "Nov", "Dec"
+    ];
+
+    var day = date.getDate();
+    var monthIndex = date.getMonth();
+    var year = date.getFullYear();
+
+    return day + ' ' + monthNames[monthIndex] + ' ' + year;
+}
+
 export { ValidationComponent }
