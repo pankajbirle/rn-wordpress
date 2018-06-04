@@ -7,25 +7,38 @@
 import React, { Component } from 'react';
 import { View, Text, TextInput, TouchableHighlight, StyleSheet, AsyncStorage } from 'react-native';
 import { Container, Header, Left, Body, Right, Icon, Title, Button, Radio, ListItem, Picker, Content, CheckBox } from 'native-base';
+import { connect } from 'react-redux';
 import { ValidationComponent } from '../../../helper';
-import { HeaderComponent } from '../../common'
-import styles from '../../../assets/styles'
+import styles from '../../../assets/styles';
+import { HeaderComponent, ToastComponent } from '../../common'
+import { registerUser } from '../../../actions/Auth';
 
-export default class Register extends ValidationComponent {
+class Register extends ValidationComponent {
 
     constructor(props) {
         super(props);
         this.state = {
-            name: "",
+            username: "",
             email: "",
-            number: "",
             error: false,
             password: "",
-            gender: "",
-            language: "",
-            checked: false,
-            isSubmitted: false
+            isSubmitted: false,
+            confirmpassword: "",
+            loading: false,
+            showToast: false,
+            visible: false,
+            toastBgColor: 'green'
         };
+    }
+
+    /**
+   * @method hideToast
+   * @description function to hide toast
+   */
+    hideToast = () => {
+        setTimeout(() => this.setState({
+            visible: false
+        }), 2000); /** hide toast after 2s */
     }
 
     /**
@@ -35,7 +48,7 @@ export default class Register extends ValidationComponent {
     checkValidation = () => {
         /* Call ValidationComponent validate method */
         this.validate({
-            name: {
+            username: {
                 required: true,
                 name: true,
                 minlength: 3,
@@ -45,24 +58,12 @@ export default class Register extends ValidationComponent {
                 required: true,
                 email: true,
             },
-            number: {
-                required: true,
-                numbers: true,
-                minlength: 10,
-                maxlength: 10,
-            },
             password: {
                 required: true,
                 password: true,
             },
-            gender: {
-                required: true
-            },
-            language: {
-                required: true
-            },
-            checked: {
-                checkRequired: true
+            confirmpassword: {
+                required: true,
             }
         });
         this.setState({ error: true });
@@ -103,14 +104,45 @@ export default class Register extends ValidationComponent {
      * @description After pressing the register button
      */
     onPressRegisterButton = () => {
+        const { username, email, password } = this.state;
         this.setState({ isSubmitted: true });
         this.checkValidation();
         if (this.getErrorMessages()) {
 
         } else {
-            alert("You are successfully registered!");
-            AsyncStorage.setItem('isLoggedIn', 'true')
-            this.props.navigation.navigate('AuthLoading')
+            this.setState({ loading: true });
+            this.props.registerUser(username, email, password, (res) => {
+                console.log("res", res);
+                let status = res.status;
+                alert(status);
+                this.setState({ loading: false });
+                // if (status != 200 && status != 204) {
+                //     if (status == undefined) {
+                //         this.setState({
+                //             visible: true, message: "Invalid username/password", toastBgColor: 'red'
+                //         })
+                //     } else if (status == 404) {
+                //         this.setState({
+                //             visible: true, message: status, toastBgColor: 'red'
+                //         })
+                //     } else if (status == 401) {
+                //         this.setState({
+                //             visible: true, message: status, toastBgColor: 'red'
+                //         })
+                //     } else {
+                //         this.setState({
+                //             visible: true, message: "There is some error. Please try again later.", toastBgColor: 'red'
+                //         })
+                //     }
+                // } else {
+                //     this.setState({
+                //         visible: true, message: 'You are successfully registered!', toastBgColor: 'green'
+                //     })
+                //     AsyncStorage.setItem('userResponse', JSON.stringify(res.data));
+                //     this.props.navigation.navigate('PostListing')
+                // }
+            });
+
         }
     }
 
@@ -126,64 +158,68 @@ export default class Register extends ValidationComponent {
                     leftButton='back'
                 />
                 <Content style={styles.m20}>
-                    <TextInput placeholder="Name" onChangeText={this.onInputValueChanged('name')} value={this.state.name} />
-                    {this.isFieldInError('name') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('name')}</Text>}
+                    <TextInput placeholder="Name" onChangeText={this.onInputValueChanged('username')} value={this.state.username} />
+                    {this.isFieldInError('username') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('username')}</Text>}
 
                     <TextInput placeholder="Email" onChangeText={this.onInputValueChanged('email')} value={this.state.email} />
                     {this.isFieldInError('email') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('email')}</Text>}
 
-                    <TextInput placeholder="Phone Number" onChangeText={this.onInputValueChanged('number')} value={this.state.number} />
-                    {this.isFieldInError('number') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('number')}</Text>}
-
                     <TextInput secureTextEntry placeholder="Password" onChangeText={this.onInputValueChanged('password')} value={this.state.password} />
                     {this.isFieldInError('password') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('password')}</Text>}
 
-                    <Text>Gender:</Text>
-                    <ListItem>
-                        <Text>Male</Text>
-                        <Right>
-                            <Radio onPress={this.onValueChanged('gender', 'male')}
-                                selected={this.state.gender == "male"} />
-                        </Right>
-                    </ListItem>
+                    <TextInput secureTextEntry placeholder="Confirm Password" onChangeText={this.onInputValueChanged('confirmpassword')} value={this.state.confirmpassword} />
+                    {this.isFieldInError('confirmpassword') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('confirmpassword')}</Text>}
 
-                    <ListItem>
-                        <Text>Female</Text>
-                        <Right>
-                            <Radio onPress={this.onValueChanged('gender', 'female')}
-                                selected={this.state.gender == "female"} />
-                        </Right>
-                    </ListItem>
-                    {this.isFieldInError('gender') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('gender')}</Text>}
-
-                    <Picker
-                        selectedValue={this.state.language}
-                        style={{ height: 50, width: 100 }}
-                        onValueChange={this.onInputValueChanged('language')}>
-                        <Picker.Item label="Select" value="" />
-                        <Picker.Item label="Java" value="java" />
-                        <Picker.Item label="JavaScript" value="js" />
-                    </Picker>
-
-                    {this.isFieldInError('language') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('language')}</Text>}
-
-                    <ListItem>
-                        <CheckBox checked={this.state.checked}
-                            onPress={this.onValueChanged('checked', !this.state.checked)} />
-                        <Body>
-                            <Text> Terms & Conditions</Text>
-                        </Body>
-                    </ListItem>
-
-                    {this.isFieldInError('checked') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('checked')}</Text>}
-
+                    {this.state.isSubmitted && !this.isFieldInError('confirmpassword') && this.state.password != this.state.confirmpassword && (
+                        <Text style={styles.errorTextStyle}>Must be same as Password</Text>
+                    )}
                     <Button success block style={{ marginTop: 20 }}
                         onPress={this.onPressRegisterButton}
                     >
                         <Text>Register</Text>
                     </Button>
                 </Content>
+                <ToastComponent
+                    visible={this.state.visible}
+                    backgroundColor={this.state.toastBgColor}
+                    onShow={this.hideToast}
+                    message={this.state.message}
+                />
             </Container>
         );
     }
 }
+
+
+/**
+* @method mapStateToProps
+* @description return state to component as props
+* @param {*} state
+*/
+function mapStateToProps(store) {
+    return {
+
+    }
+}
+
+/**
+ * @method mapDispatchToProps
+ * @description dispatch actions
+* @param {*} dispatch
+                        */
+function mapDispatchToProps(dispatch) {
+    return {
+        registerUser: (name, email, password, callback) => dispatch(registerUser(name, email, password, callback)),
+    }
+}
+
+/**
+ * @method connect
+ * @description connect with redux
+* @param {function} mapStateToProps
+* @param {function} mapDispatchToProps
+                        */
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Register);

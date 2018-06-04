@@ -1,8 +1,12 @@
 import axios from 'axios';
 import {
-    LOGIN_SUCCESS, LOGIN_FAILURE
+    LOGIN_SUCCESS, LOGIN_FAILURE, REGISTER_SUCCESS, REGISTER_FAILURE
 } from '../constants';
 import { API } from '../config';
+
+var headers = {
+    'Content-Type': 'application/json',
+}
 
 /**
  * @method loginUser
@@ -10,7 +14,7 @@ import { API } from '../config';
  */
 export function loginUser(username, password, callback) {
     return (dispatch) => {
-        axios.post(API.login, {username, password})
+        axios.post(API.login, { username, password }, { headers })
             .then((response) => {
                 callback(response)
                 dispatch(getLoginSuccess(response))
@@ -40,5 +44,44 @@ export function getLoginSuccess(data) {
 export function getFailure() {
     return {
         type: LOGIN_FAILURE
+    }
+}
+
+/**
+ * @method registerUser
+ * @description get data from dummy api
+ */
+export function registerUser(username, email, password, callback) {
+    return (dispatch) => {
+        axios.post(API.register, { username, email, password }, { headers })
+            .then((response) => {
+                callback(response);
+                dispatch(getRegisterSuccess(response));
+            })
+            .catch((error) => {
+                callback(error);
+                dispatch(getRegisterFailure(error));
+            });
+    }
+}
+
+/**
+ * @method getRegisterSuccess
+ * @description return object containing action type
+ */
+export function getRegisterSuccess(data) {
+    return {
+        type: REGISTER_SUCCESS,
+        data,
+    }
+}
+
+/**
+ * @method getRegisterFailure
+ * @description return object containing action type
+ */
+export function getRegisterFailure() {
+    return {
+        type: REGISTER_FAILURE
     }
 }

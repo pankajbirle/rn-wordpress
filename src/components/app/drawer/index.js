@@ -4,7 +4,7 @@
  */
 
 import React, { Component } from 'react';
-import { Image, AsyncStorage } from 'react-native'
+import { Image, AsyncStorage } from 'react-native';
 import { List, ListItem, Container, Header, Content, Card, CardItem, Thumbnail, Text, Button, Icon, Left, Body, Right } from 'native-base';
 
 export default class Drawer extends Component {
@@ -28,22 +28,6 @@ export default class Drawer extends Component {
                     })
                 }
             })
-    }
-
-    /**
-     * @method onPress
-     * @description Navigate to tab screen on button press
-     */
-    onPress = () => () => {
-        this.props.navigation.navigate('TabScreen')
-    }
-
-    uploadDocument = () => () => {
-        this.props.navigation.navigate('UploadScreen');
-    }
-
-    showConfirmation = () => () => {
-        this.props.navigation.navigate('ConfirmationScreen');
     }
 
     navigate = (path) => () => {
@@ -83,7 +67,12 @@ export default class Drawer extends Component {
                         <ListItem>
                             <Text onPress={this.navigate('PostListing')}>Post Listing</Text>
                         </ListItem>
-
+                        <ListItem>
+                            <Text onPress={this.navigate('Gallery')}>Gallery</Text>
+                        </ListItem>
+                        <ListItem>
+                            <Text onPress={this.navigate('Pages')}>Pages</Text>
+                        </ListItem>
                         <ListItem>
                             <Text onPress={this.onLogout()}>Logout</Text>
                         </ListItem>

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { View, TextInput, Button, AsyncStorage, Text, ActivityIndicator } from 'react-native';
 import { Container, Header, Left, Body, Right, Icon, Title } from 'native-base';
+import { connect } from 'react-redux';
 import styles from '../../../assets/styles';
 import { ValidationComponent } from '../../../helper';
 import { HeaderComponent, ToastComponent } from '../../common'
 import { loginUser } from '../../../actions/Auth';
-import { connect } from 'react-redux';
 
 class Login extends ValidationComponent {
     constructor(props) {
@@ -52,19 +52,20 @@ class Login extends ValidationComponent {
         } else {
             this.setState({ loading: true })
             this.props.loginUser(name, password, (res) => {
+                let status = res.status;
                 this.setState({ loading: false })
-                if (res.status != 200 && res.status != 204) {
-                    if (res.status == undefined) {
+                if (status != 200 && status != 204) {
+                    if (status == undefined) {
                         this.setState({
                             visible: true, message: "Invalid username/password", toastBgColor: 'red'
                         })
-                    } else if (res.status == 404) {
+                    } else if (status == 404) {
                         this.setState({
-                            visible: true, message: res.status, toastBgColor: 'red'
+                            visible: true, message: status, toastBgColor: 'red'
                         })
-                    } else if (res.status == 401) {
+                    } else if (status == 401) {
                         this.setState({
-                            visible: true, message: res.status, toastBgColor: 'red'
+                            visible: true, message: status, toastBgColor: 'red'
                         })
                     } else {
                         this.setState({
@@ -154,6 +155,11 @@ class Login extends ValidationComponent {
                     <Button
                         title='Login'
                         onPress={this.login}
+                    />
+                    <View style={{ marginTop: 20 }} />
+                    <Button
+                        title='Register'
+                        onPress={this.register}
                     />
 
                 </View>

@@ -10,6 +10,8 @@ import TabScreen from './tab-screen';
 import UploadScreen from './upload';
 import ConfirmationScreen from './confirm';
 import PostListing from './postListing';
+import Gallery from './gallery';
+import Pages from './pages';
 import AddPost from './AddPost';
 import SinglePost from './SinglePost';
 import EditPost from './postListing/EditPost';
@@ -29,6 +31,12 @@ const AppStack = DrawerNavigator(
         },
         SinglePost: {
             screen: SinglePost
+        },
+        Gallery: {
+            screen: Gallery
+        },
+        Pages: {
+            screen: Pages
         }
     }, {
         contentComponent: DrawerComponent, /** This is our custom drawer component */

@@ -14,7 +14,10 @@ export const API = {
     getPeople: `${BASE_URL}/people/`, /** Define even the endpoints */
     uploadFile: 'http://183.182.84.29/MahycoApi/ImageUpload',
     getPost: `${BASE_URL_WP}/posts`,
-    login: `${BASE_URL_WP_NEW}/jwt-auth/v1/token`
+    login: `${BASE_URL_WP_NEW}/jwt-auth/v1/token`,
+    register : `${BASE_URL_WP}/users/register`,
+    gallery : `${BASE_URL_WP}/gallery`,
+    pages : `${BASE_URL_WP}/pages`,
 }
 
 /** Export FILE_CONFIG */

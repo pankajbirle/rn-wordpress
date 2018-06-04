@@ -28,7 +28,7 @@ import { API } from '../config';
  */
 export function fetchPostsFromAPI() {
     return (dispatch) => {
-        dispatch(getPost())
+        dispatch(getPost());
         axios.get(`${API.getPost}?_embed&per_page=100`, { headers })
             .then((response) => {
                 // alert(JSON.stringify(response))
