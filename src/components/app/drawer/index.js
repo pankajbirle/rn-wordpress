@@ -81,7 +81,7 @@ export default class Drawer extends Component {
                     </Card>
                     <List>
                         <ListItem>
-                            <Text onPress={this.navigate('PostListing')}>API Listing</Text>
+                            <Text onPress={this.navigate('PostListing')}>Post Listing</Text>
                         </ListItem>
 
                         <ListItem>

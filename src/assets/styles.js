@@ -107,7 +107,7 @@ export default StyleSheet.create({
         color: '#f26568'
     },
     post: {
-        fontSize: 14,
+        fontSize: 16,
         fontFamily: 'Helvetica'
     },
     flexDirectionStyle: {
@@ -165,5 +165,9 @@ export default StyleSheet.create({
     },
     headerPostButton: {
         color: '#fff'
+    },
+    author: {
+        fontSize: 12,
+        marginTop: 4
     }
 })

@@ -146,26 +146,7 @@ class PostListing extends Component {
                                             <View>
                                                 <View style={styles.viewTitle}>
                                                     <Text onPress={() => this.props.navigation.navigate('SinglePost', { item })} style={styles.listItemTitle}>{item.title.rendered}</Text>
-                                                </View>
-                                                <View style={styles.actionButtons}>
-                                                    <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.editPost(item.id)}>
-                                                        <View style={styles.flexDirectionStyle}>
-                                                            <Icon style={styles.editIcon} name='ios-create-outline'></Icon>
-                                                            <Text>Edit  </Text>
-                                                        </View>
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.deleteSelectedPost(item.id)}>
-                                                        <View style={styles.flexDirectionStyle}>
-                                                            <Icon style={styles.deleteIcon} name='ios-trash-outline'></Icon>
-                                                            <Text> Delete  </Text>
-                                                        </View>
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.props.navigation.navigate("SinglePost", { item })}>
-                                                        <View style={styles.flexDirectionStyle}>
-                                                            <Icon style={styles.viewIcon} name='ios-eye-outline'></Icon>
-                                                            <Text> View</Text>
-                                                        </View>
-                                                    </TouchableOpacity>
+                                                    <Text style={styles.author}>Author: {capitalizeFirstLetter(item._embedded.author[0].name)}</Text>
                                                 </View>
                                             </View>
                                         </Body>
@@ -179,10 +160,29 @@ class PostListing extends Component {
 
                                     <CardItem footer bordered>
                                         <Left>
-                                            <Text>{capitalizeFirstLetter(item._embedded.author[0].name)}</Text>
+                                            <Text>{formatDate(new Date(item.date))}</Text>
                                         </Left>
                                         <Right>
-                                            <Text>{formatDate(new Date(item.date))}</Text>
+                                            <View style={styles.actionButtons}>
+                                                <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.editPost(item.id)}>
+                                                    <View style={styles.flexDirectionStyle}>
+                                                        <Icon style={styles.editIcon} name='ios-create-outline'></Icon>
+                                                        <Text>Edit  </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.deleteSelectedPost(item.id)}>
+                                                    <View style={styles.flexDirectionStyle}>
+                                                        <Icon style={styles.deleteIcon} name='ios-trash-outline'></Icon>
+                                                        <Text> Delete  </Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.props.navigation.navigate("SinglePost", { item })}>
+                                                    <View style={styles.flexDirectionStyle}>
+                                                        <Icon style={styles.viewIcon} name='ios-eye-outline'></Icon>
+                                                        <Text> View</Text>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            </View>
                                         </Right>
                                     </CardItem>
                                 </Card>
