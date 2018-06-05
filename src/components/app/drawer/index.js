@@ -74,6 +74,9 @@ export default class Drawer extends Component {
                             <Text onPress={this.navigate('Pages')}>Pages</Text>
                         </ListItem>
                         <ListItem>
+                            <Text onPress={this.navigate('Services')}>Services</Text>
+                        </ListItem>
+                        <ListItem>
                             <Text onPress={this.onLogout()}>Logout</Text>
                         </ListItem>
                     </List>

@@ -18,6 +18,7 @@ export const API = {
     register : `${BASE_URL_WP}/users/register`,
     gallery : `${BASE_URL_WP}/gallery`,
     pages : `${BASE_URL_WP}/pages`,
+    services : `${BASE_URL_WP}/service`,
 }
 
 /** Export FILE_CONFIG */

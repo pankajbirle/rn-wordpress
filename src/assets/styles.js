@@ -169,5 +169,12 @@ export default StyleSheet.create({
     author: {
         fontSize: 12,
         marginTop: 4
+    },
+    webView: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
+        height: deviceHeight,
+        marginTop: 10
     }
 })

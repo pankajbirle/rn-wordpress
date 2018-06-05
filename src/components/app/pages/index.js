@@ -71,12 +71,7 @@ class Pages extends Component {
                     {pages && this.pagesList(pages)}
                     {this.state.url != '' && (
                         <WebView
-                            style={{
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                flex: 1,
-                                height: 400
-                            }}
+                            style={styles.webView}
                             source={{ uri: this.state.url }}
                             javaScriptEnabled={true}
                             domStorageEnabled={true} />

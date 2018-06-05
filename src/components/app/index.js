@@ -12,6 +12,7 @@ import ConfirmationScreen from './confirm';
 import PostListing from './postListing';
 import Gallery from './gallery';
 import Pages from './pages';
+import Services from './services';
 import AddPost from './AddPost';
 import SinglePost from './SinglePost';
 import EditPost from './postListing/EditPost';
@@ -37,6 +38,9 @@ const AppStack = DrawerNavigator(
         },
         Pages: {
             screen: Pages
+        },
+        Services: {
+            screen: Services
         }
     }, {
         contentComponent: DrawerComponent, /** This is our custom drawer component */

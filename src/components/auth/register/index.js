@@ -114,33 +114,32 @@ class Register extends ValidationComponent {
             this.props.registerUser(username, email, password, (res) => {
                 console.log("res", res);
                 let status = res.status;
-                alert(status);
                 this.setState({ loading: false });
-                // if (status != 200 && status != 204) {
-                //     if (status == undefined) {
-                //         this.setState({
-                //             visible: true, message: "Invalid username/password", toastBgColor: 'red'
-                //         })
-                //     } else if (status == 404) {
-                //         this.setState({
-                //             visible: true, message: status, toastBgColor: 'red'
-                //         })
-                //     } else if (status == 401) {
-                //         this.setState({
-                //             visible: true, message: status, toastBgColor: 'red'
-                //         })
-                //     } else {
-                //         this.setState({
-                //             visible: true, message: "There is some error. Please try again later.", toastBgColor: 'red'
-                //         })
-                //     }
-                // } else {
-                //     this.setState({
-                //         visible: true, message: 'You are successfully registered!', toastBgColor: 'green'
-                //     })
-                //     AsyncStorage.setItem('userResponse', JSON.stringify(res.data));
-                //     this.props.navigation.navigate('PostListing')
-                // }
+                if (status != 200 && status != 204) {
+                    if (status == undefined) {
+                        this.setState({
+                            visible: true, message: "Wrong parameters", toastBgColor: 'red'
+                        })
+                    } else if (status == 404) {
+                        this.setState({
+                            visible: true, message: status, toastBgColor: 'red'
+                        })
+                    } else if (status == 401) {
+                        this.setState({
+                            visible: true, message: status, toastBgColor: 'red'
+                        })
+                    } else {
+                        this.setState({
+                            visible: true, message: "There is some error. Please try again later.", toastBgColor: 'red'
+                        })
+                    }
+                } else {
+                    this.setState({
+                        visible: true, message: 'You are successfully registered!', toastBgColor: 'green'
+                    })
+                    AsyncStorage.setItem('userResponse', JSON.stringify(res.data));
+                    this.props.navigation.navigate('PostListing')
+                }
             });
 
         }

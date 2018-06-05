@@ -20,7 +20,7 @@ export function loginUser(username, password, callback) {
                 dispatch(getLoginSuccess(response))
             })
             .catch((error) => {
-                callback(error)
+                callback(error);
                 dispatch(getFailure(error))
             });
     }
