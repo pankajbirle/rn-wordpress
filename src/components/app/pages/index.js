@@ -13,11 +13,10 @@ import {
     WebView
 } from 'react-native';
 import {
-    Header, Body, Container, Content, Icon, Card, Footer, Button, CardItem, Left, Right
+    Header, Body, Container, Content, Icon, Card, Footer, Button, CardItem, Left, Right, Tab, Tabs, ScrollableTab, TabHeading
 } from 'native-base';
 
 class Pages extends Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -47,12 +46,20 @@ class Pages extends Component {
 
         return pages.map((res) => {
             return (
-                <View>
-                    <Text onPress={() => this.onPagePress(res.link)}>{res.title.rendered}</Text>
-                </View>
+
+                <Tab heading={res.title.rendered}
+                    tabStyle={styles.tabStyle}
+                    activeTabStyle={styles.activeTabStyle}
+                    activeTextStyle={styles.activeTextStyle}
+                    textStyle={styles.textStyle} style={{ backgroundColor: "#E4EAF2", flex: 1 }}>
+                    <WebView
+                        style={styles.webView}
+                        source={{ uri: res.link }}
+                        javaScriptEnabled={true}
+                        domStorageEnabled={true} />
+                </Tab>
             )
         })
-
     }
 
     /**
@@ -67,16 +74,12 @@ class Pages extends Component {
                     title='Pages'
                     leftButton='menu'
                 />
-                <Content style={styles.contentStyle}>
-                    {pages && this.pagesList(pages)}
-                    {this.state.url != '' && (
-                        <WebView
-                            style={styles.webView}
-                            source={{ uri: this.state.url }}
-                            javaScriptEnabled={true}
-                            domStorageEnabled={true} />
-                    )}
-                </Content>
+                {pages && (
+                    <Tabs renderTabBar={() => <ScrollableTab />} style={{ flex: 1 }} locked={true}>
+                        {this.pagesList(pages)}
+                    </Tabs>
+                )}
+
                 {fetchingAllPages && (
                     <Spinner />
                 )}

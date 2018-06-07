@@ -51,15 +51,15 @@ export function getFailure() {
  * @method registerUser
  * @description get data from dummy api
  */
-export function registerUser(username, email, password, callback) {
+export function registerUser(firstname, lastname, username, email, password, callback) {
     return (dispatch) => {
-        axios.post(API.register, { username, email, password }, { headers })
+        axios.post(API.register, { firstname, lastname, username, email, password }, { headers })
             .then((response) => {
                 callback(response);
                 dispatch(getRegisterSuccess(response));
             })
             .catch((error) => {
-                callback(error);
+                callback(error.response);
                 dispatch(getRegisterFailure(error));
             });
     }

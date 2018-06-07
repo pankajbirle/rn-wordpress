@@ -176,5 +176,31 @@ export default StyleSheet.create({
         flex: 1,
         height: deviceHeight,
         marginTop: 10
+    },
+    imageStyle: {
+        height: 200,
+        width: null,
+        flex: 1,
+        marginLeft: 15,
+        marginRight: 15
+    },
+    activeTextStyle: {
+        color: '#000',
+        fontWeight: 'normal',
+    },
+    activeTabStyle: {
+        backgroundColor: 'white',
+    },
+    activeTextStyle: {
+        color: '#1f66d1',
+        fontWeight: 'bold',
+    },
+    tabStyle: {
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        fontWeight: 'normal',
+    },
+    textStyle: {
+        color: '#fa6a6d'
     }
 })

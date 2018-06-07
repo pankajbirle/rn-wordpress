@@ -15,8 +15,8 @@ import {
     Header, Body, Container, Content, Icon, Card, Footer, Button, CardItem, Left, Right
 } from 'native-base';
 import HTMLView from 'react-native-htmlview';
-import { capitalizeFirstLetter, formatDate } from '../../../helper'
-
+import { capitalizeFirstLetter, formatDate, stripHtml, convertDate } from '../../../helper'
+import Moment from 'moment';
 class PostListing extends Component {
 
     constructor(props) {
@@ -154,32 +154,32 @@ class PostListing extends Component {
 
                                     <CardItem bordered>
                                         <Body>
-                                            <Text ellipsizeMode='tail' numberOfLines={4}>{item.content.rendered}</Text>
+                                            <Text ellipsizeMode='tail' numberOfLines={4}>{stripHtml(item.content.rendered)}</Text>
                                         </Body>
                                     </CardItem>
 
                                     <CardItem footer bordered>
                                         <Left>
-                                            <Text>{formatDate(new Date(item.date))}</Text>
+                                            <Text style={{ fontSize: 13 }}>{convertDate(item.date)}</Text>
                                         </Left>
                                         <Right>
                                             <View style={styles.actionButtons}>
                                                 <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.editPost(item.id)}>
                                                     <View style={styles.flexDirectionStyle}>
-                                                        <Icon style={styles.editIcon} name='ios-create-outline'></Icon>
-                                                        <Text>Edit  </Text>
+                                                        <Icon style={[styles.editIcon, { fontSize: 18 }]} name='ios-create-outline'></Icon>
+                                                        <Text style={{ fontSize: 13 }}>Edit  </Text>
                                                     </View>
                                                 </TouchableOpacity>
                                                 <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.deleteSelectedPost(item.id)}>
                                                     <View style={styles.flexDirectionStyle}>
-                                                        <Icon style={styles.deleteIcon} name='ios-trash-outline'></Icon>
-                                                        <Text> Delete  </Text>
+                                                        <Icon style={[styles.deleteIcon, { fontSize: 18 }]} name='ios-trash-outline'></Icon>
+                                                        <Text style={{ fontSize: 13 }}> Delete  </Text>
                                                     </View>
                                                 </TouchableOpacity>
                                                 <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.props.navigation.navigate("SinglePost", { item })}>
                                                     <View style={styles.flexDirectionStyle}>
-                                                        <Icon style={styles.viewIcon} name='ios-eye-outline'></Icon>
-                                                        <Text> View</Text>
+                                                        <Icon style={[styles.viewIcon, { fontSize: 18 }]} name='ios-eye-outline'></Icon>
+                                                        <Text style={{ fontSize: 13 }}> View</Text>
                                                     </View>
                                                 </TouchableOpacity>
                                             </View>

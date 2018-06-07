@@ -6,16 +6,12 @@ const defaultMessages = {
   en: {
     name: 'Please enter a valid name.',
     numbers: 'Please enter a valid number.',
-    password: `Password requires:
-    Minimum eight characters
-    At least one uppercase letter
-    One lowercase letter
-    One number and one special character`,
+    password: `Password requires minimum 6 & maximum 32 characters.`,
     email: 'Please enter a valid email address.',
     date: 'Please enter a valid date ({1}).',
     minlength: 'Min length must be {1}.',
     maxlength: 'Max length must be {1}.',
-    required: `{0} is required.`,
+    required: `This field is required.`,
     checkRequired: 'This field is required.',
     },
 };

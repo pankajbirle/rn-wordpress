@@ -7,21 +7,24 @@ import {
     ActivityIndicator,
     FlatList,
     TouchableOpacity,
-    Alert
+    Alert,
+    Image,
+    BackHandler
 } from 'react-native';
 import {
-    Header, Body, Container, Content, Icon, Card, Footer, Button, CardItem, Left, Right
+    Header, Body, Container, Content, Icon, Card, Footer, Button, CardItem, Left, Right, Title
 } from 'native-base';
 import HTMLView from 'react-native-htmlview';
 import { capitalizeFirstLetter, formatDate, stripHtml, convertDate } from '../../../helper'
 
-export default class SinglePost extends Component {
+export default class SingleService extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             item: null
         }
+        this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     }
     /**
      * @method componentDidMount
@@ -32,6 +35,19 @@ export default class SinglePost extends Component {
         this.setState({ item: params.item })
     }
 
+    componentWillMount() {
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    componentWillUnmount() {
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButtonClick);
+    }
+
+    handleBackButtonClick() {
+        this.props.navigation.navigate('Services');
+        return true;
+    }
+
     /**
      * @method render
      * @description Renders the component
@@ -40,15 +56,25 @@ export default class SinglePost extends Component {
         const { item } = this.state;
         return (
             <Container>
-                <HeaderComponent
-                    title='Post Detail'
-                    leftButton='back'
-                />
+                <Header>
+                    <Left>
+                        <Button
+                            transparent
+                            onPress={() => this.props.navigation.navigate('Services')}
+                        >
+                            <Icon name="arrow-back" />
+                        </Button>
+                    </Left>
+                    <Body style={{
+                        paddingLeft: 20
+                    }}>
+                        <Title>Service Detail</Title>
+                    </Body>
+                </Header>
                 <Content style={styles.contentStyle}>
                     {item && (
-
                         <Card style={styles.cardStyle}>
-                            <CardItem bordered>
+                            <CardItem>
                                 <Body>
                                     <View style={styles.flexDirectionStyle}>
                                         <View style={styles.viewTitle}>
@@ -57,16 +83,17 @@ export default class SinglePost extends Component {
                                     </View>
                                 </Body>
                             </CardItem>
-
+                            <CardItem cardBody>
+                                <Image source={{ uri: item._embedded['wp:featuredmedia'][0].media_details.sizes.large.source_url }} style={styles.imageStyle} />
+                            </CardItem>
                             <CardItem bordered>
                                 <Body>
                                     <Text>{stripHtml(item.content.rendered)}</Text>
                                 </Body>
                             </CardItem>
-
-                            <CardItem footer bordered>
+                            <CardItem footer>
                                 <Left>
-                                    <Text>{capitalizeFirstLetter(item._embedded.author[0].name)}</Text>
+                                    <Text>Service Type: {item.service_type.service_type}</Text>
                                 </Left>
                                 <Body>
                                     <Text>{convertDate(item.date)}</Text>

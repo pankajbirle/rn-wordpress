@@ -8,6 +8,7 @@ import { Toast as NativeBaseToast } from 'native-base';
 
 /** This ValidationComponent is used in Registration screen */
 import ValidationComponent from './validations';
+import Moment from 'moment';
 
 
 export class Toast {
@@ -51,5 +52,15 @@ export function formatDate(date) {
 
     return day + ' ' + monthNames[monthIndex] + ' ' + year;
 }
+
+export function stripHtml(text) {
+    return text.replace(/<[^>]+>/g, '');
+}
+
+export function convertDate(date) {
+    return Moment(date).format("DD-MMM-YYYY hh:mm A");
+}
+
+
 
 export { ValidationComponent }

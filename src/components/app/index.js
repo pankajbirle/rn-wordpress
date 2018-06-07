@@ -15,6 +15,7 @@ import Pages from './pages';
 import Services from './services';
 import AddPost from './AddPost';
 import SinglePost from './SinglePost';
+import SingleService from './singleService';
 import EditPost from './postListing/EditPost';
 import { DrawerNavigator } from 'react-navigation';
 import { Root } from 'native-base';
@@ -41,7 +42,10 @@ const AppStack = DrawerNavigator(
         },
         Services: {
             screen: Services
-        }
+        },
+        SingleService: {
+            screen: SingleService
+        },
     }, {
         contentComponent: DrawerComponent, /** This is our custom drawer component */
     }

@@ -27,7 +27,9 @@ class Register extends ValidationComponent {
             loading: false,
             showToast: false,
             visible: false,
-            toastBgColor: 'green'
+            toastBgColor: 'green',
+            firstname: '',
+            lastname: ''
         };
     }
 
@@ -48,11 +50,20 @@ class Register extends ValidationComponent {
     checkValidation = () => {
         /* Call ValidationComponent validate method */
         this.validate({
+            firstname: {
+                required: true,
+                name: true,
+                maxlength: 20,
+            },
+            lastname: {
+                required: true,
+                name: true,
+                maxlength: 20,
+            },
             username: {
                 required: true,
                 name: true,
-                minlength: 3,
-                maxlength: 7,
+                maxlength: 20,
             },
             email: {
                 required: true,
@@ -104,42 +115,62 @@ class Register extends ValidationComponent {
      * @description After pressing the register button
      */
     onPressRegisterButton = () => {
-        const { username, email, password } = this.state;
+        const { firstname, lastname, username, email, password } = this.state;
         this.setState({ isSubmitted: true });
         this.checkValidation();
         if (this.getErrorMessages()) {
 
         } else {
             this.setState({ loading: true });
-            this.props.registerUser(username, email, password, (res) => {
-                console.log("res", res);
+            this.props.registerUser(firstname, lastname, username, email, password, (res) => {
                 let status = res.status;
                 this.setState({ loading: false });
-                if (status != 200 && status != 204) {
-                    if (status == undefined) {
+
+                if (status === 200) {
+                    this.setState({
+                        visible: true, message: 'You are successfully registered! Please login to continue.', toastBgColor: 'green'
+                    })
+                   // AsyncStorage.setItem('userResponse', JSON.stringify(res.data));
+                   // this.props.navigation.navigate('PostListing')
+                   this.props.navigation.navigate('Login');
+                }
+                else {
+                    if (status == 422) {
                         this.setState({
-                            visible: true, message: "Wrong parameters", toastBgColor: 'red'
+                            visible: true, message: res.data.message, toastBgColor: 'red'
                         })
-                    } else if (status == 404) {
-                        this.setState({
-                            visible: true, message: status, toastBgColor: 'red'
-                        })
-                    } else if (status == 401) {
-                        this.setState({
-                            visible: true, message: status, toastBgColor: 'red'
-                        })
-                    } else {
+                    }
+                    else {
                         this.setState({
                             visible: true, message: "There is some error. Please try again later.", toastBgColor: 'red'
                         })
                     }
-                } else {
-                    this.setState({
-                        visible: true, message: 'You are successfully registered!', toastBgColor: 'green'
-                    })
-                    AsyncStorage.setItem('userResponse', JSON.stringify(res.data));
-                    this.props.navigation.navigate('PostListing')
                 }
+                /*  if (status != 200 && status != 204) {
+                      if (status == undefined) {
+                          this.setState({
+                              visible: true, message: "Wrong parameters", toastBgColor: 'red'
+                          })
+                      } else if (status == 404) {
+                          this.setState({
+                              visible: true, message: status, toastBgColor: 'red'
+                          })
+                      } else if (status == 401) {
+                          this.setState({
+                              visible: true, message: status, toastBgColor: 'red'
+                          })
+                      } else {
+                          this.setState({
+                              visible: true, message: "There is some error. Please try again later.", toastBgColor: 'red'
+                          })
+                      }
+                  } else {
+                      this.setState({
+                          visible: true, message: 'You are successfully registered!', toastBgColor: 'green'
+                      })
+                      AsyncStorage.setItem('userResponse', JSON.stringify(res.data));
+                      this.props.navigation.navigate('PostListing')
+                  } */
             });
 
         }
@@ -157,7 +188,13 @@ class Register extends ValidationComponent {
                     leftButton='back'
                 />
                 <Content style={styles.m20}>
-                    <TextInput placeholder="Name" onChangeText={this.onInputValueChanged('username')} value={this.state.username} />
+                    <TextInput placeholder="First Name" onChangeText={this.onInputValueChanged('firstname')} value={this.state.firstname} />
+                    {this.isFieldInError('firstname') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('firstname')}</Text>}
+
+                    <TextInput placeholder="Last Name" onChangeText={this.onInputValueChanged('lastname')} value={this.state.lastname} />
+                    {this.isFieldInError('lastname') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('lastname')}</Text>}
+
+                    <TextInput placeholder="User Name" onChangeText={this.onInputValueChanged('username')} value={this.state.username} />
                     {this.isFieldInError('username') && <Text style={styles.errorTextStyle}>{this.getErrorsInField('username')}</Text>}
 
                     <TextInput placeholder="Email" onChangeText={this.onInputValueChanged('email')} value={this.state.email} />
@@ -208,7 +245,7 @@ function mapStateToProps(store) {
                         */
 function mapDispatchToProps(dispatch) {
     return {
-        registerUser: (name, email, password, callback) => dispatch(registerUser(name, email, password, callback)),
+        registerUser: (firstname, lastname, username, email, password, callback) => dispatch(registerUser(firstname, lastname, username, email, password, callback)),
     }
 }
 

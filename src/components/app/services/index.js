@@ -14,7 +14,7 @@ import {
 import {
     Header, Body, Container, Content, Icon, Card, Footer, Button, CardItem, Left, Right, Thumbnail
 } from 'native-base';
-import { capitalizeFirstLetter, formatDate } from '../../../helper'
+import { capitalizeFirstLetter, formatDate, stripHtml, convertDate } from '../../../helper'
 
 class Services extends Component {
 
@@ -35,14 +35,6 @@ class Services extends Component {
     componentDidMount() {
         /** Action method called to load the api as soon as the component is mounted */
         this.props.fetchServicesFromAPI()
-    }
-
-    /**
-     * @method changeScreen
-     * @description Navigate back to home
-     */
-    changeScreen = () => {
-        this.props.navigation.goBack();
     }
 
     /**
@@ -69,7 +61,6 @@ class Services extends Component {
      */
     render() {
         const { services, fetchingAllServices } = this.props.services;
-
         return (
             <Container>
                 <HeaderComponent
@@ -85,29 +76,28 @@ class Services extends Component {
                             keyExtractor={this.keyExtractor}
                             renderItem={({ item }) => (
                                 <Card>
-                                    <CardItem bordered>
+                                    <CardItem>
                                         <Left>
-                                            <Thumbnail large source={{ uri: item._embedded['wp:featuredmedia'][0].media_details.sizes.large.source_url }} />
-                                        </Left>
-                                            <View style={styles.viewTitle}>
-                                                <Text onPress={() => this.props.navigation.navigate('SinglePost', { item })} style={styles.listItemTitle}>{item.title.rendered}</Text>
+                                            <Thumbnail source={{ uri: item._embedded['wp:featuredmedia'][0].media_details.sizes.large.source_url }} />
+                                            <Body>
+                                                <Text onPress={() => this.props.navigation.navigate('SingleService', { item })} style={styles.listItemTitle}>{item.title.rendered}</Text>
                                                 <Text style={styles.author}>Service Type: {item.service_type.service_type}</Text>
-                                            </View>
+                                            </Body>
+                                        </Left>
                                     </CardItem>
-
                                     <CardItem bordered>
                                         <Body>
-                                            <Text ellipsizeMode='tail' numberOfLines={4}>{item.content.rendered}</Text>
+                                            <Text ellipsizeMode='tail' numberOfLines={4}>{stripHtml(item.content.rendered)}</Text>
                                         </Body>
                                     </CardItem>
 
                                     <CardItem footer bordered>
                                         <Left>
-                                            <Text>{formatDate(new Date(item.date))}</Text>
+                                            <Text>{convertDate(item.date)}</Text>
                                         </Left>
                                         <Right>
                                             <View style={styles.actionButtons}>
-                                                <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.props.navigation.navigate("SinglePost", { item })}>
+                                                <TouchableOpacity style={styles.postActionButtonWrap} onPress={() => this.props.navigation.navigate("SingleService", { item })}>
                                                     <View style={styles.flexDirectionStyle}>
                                                         <Icon style={styles.viewIcon} name='ios-eye-outline'></Icon>
                                                         <Text> View</Text>
@@ -127,6 +117,9 @@ class Services extends Component {
                         message={this.state.message}
                     />
                 </Content>
+                {fetchingAllServices && (
+                    <Spinner />
+                )}
             </Container>
         )
     }
