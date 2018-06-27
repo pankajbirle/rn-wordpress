@@ -187,6 +187,13 @@ class PostListing extends Component {
                                     </CardItem>
                                 </Card>
                             )}
+                            ListEmptyComponent={() => {
+                                if (!showLoader) {
+                                    return <Text style={styles.noDataStyle}>No Record Found</Text>
+                                } else {
+                                    return null
+                                }
+                            }}
                         />
                     )}
                     <ToastComponent

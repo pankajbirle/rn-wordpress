@@ -36,7 +36,12 @@ class Gallery extends Component {
                     leftButton='menu'
                 />
                 <Content>
-                    <ImageGallery images={imageUrls} />
+                    {imageUrls && (
+                        <ImageGallery images={imageUrls} />
+                    )}
+                    {!imageUrls && (
+                        <Text style={styles.noDataStyle}>No Record Found</Text>
+                    )}
                 </Content>
                 {fetchingAllImages && (
                     <Spinner />

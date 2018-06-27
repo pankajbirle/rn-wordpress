@@ -202,5 +202,12 @@ export default StyleSheet.create({
     },
     textStyle: {
         color: '#fa6a6d'
-    }
+    },
+    noDataStyle: {
+        justifyContent: 'center',
+        alignSelf: 'center',
+        fontSize: 18,
+        marginTop: 15,
+        color: "#5A606C"
+    },
 })

@@ -79,7 +79,9 @@ class Pages extends Component {
                         {this.pagesList(pages)}
                     </Tabs>
                 )}
-
+                {!pages && !fetchingAllPages && (
+                    <Text style={styles.noDataStyle}>No Record Found</Text>
+                )}
                 {fetchingAllPages && (
                     <Spinner />
                 )}

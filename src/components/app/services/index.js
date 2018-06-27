@@ -108,6 +108,13 @@ class Services extends Component {
                                     </CardItem>
                                 </Card>
                             )}
+                            ListEmptyComponent={() => {
+                                if (!fetchingAllServices) {
+                                    return <Text style={styles.noDataStyle}>No Record Found</Text>
+                                } else {
+                                    return null
+                                }
+                            }}
                         />
                     )}
                     <ToastComponent
